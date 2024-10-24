@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the Compound Words</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+        img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .word {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100px;
+            text-align: center;
+        }
+        .word:hover {
+            background-color: #0056b3;
+        }
+        .selected {
+            background-color: #ff5722 !important;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #formed-word {
+            margin-top: 10px;
+            font-size: 24px;
+            color: #4caf50;
+        }
+        .more-lessons {
+            margin-top: 30px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .more-lessons:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logo at the top -->
+<img src="https://i.imgur.com/mwpTHJj.png" alt="Logo">
+
+<h1>Match the Parts to Form Compound Words</h1>
+
+<!-- Instructions for learners -->
+<p class="instructions">Click on a word from each column to form a compound word. The word you create will appear below. Keep trying until you form the correct word!</p>
+
+<!-- Word Columns -->
+<div class="container">
+    <div class="column" id="left-column">
+        <div class="word" data-word="book">book</div>
+        <div class="word" data-word="snow">snow</div>
+        <div class="word" data-word="fire">fire</div>
+        <div class="word" data-word="sun">sun</div>
+        <div class="word" data-word="foot">foot</div>
+        <div class="word" data-word="butter">butter</div>
+        <div class="word" data-word="rain">rain</div>
+    </div>
+
+    <div class="column" id="right-column">
+        <div class="word" data-word="worm">worm</div>
+        <div class="word" data-word="fly">fly</div>
+        <div class="word" data-word="bow">bow</div>
+        <div class="word" data-word="flower">flower</div>
+        <div class="word" data-word="man">man</div>
+        <div class="word" data-word="step">step</div>
+        <div class="word" data-word="ball">ball</div>
+    </div>
+</div>
+
+<!-- Display formed word and messages -->
+<p id="formed-word"></p>
+<p id="message"></p>
+
+<!-- More Lessons Button -->
+<a href="https://sites.google.com/view/grades-2/home" class="more-lessons">More Lessons</a>
+
+<script>
+    const compoundWords = {
+        "sun": "flower",
+        "butter": "fly",
+        "rain": "bow",
+        "snow": "ball",
+        "foot": "step",
+        "book": "worm",
+        "fire": "man"
+    };
+
+    let selectedWord = null;
+    let formedWord = '';
+    const leftColumnWords = document.querySelectorAll('#left-column .word');
+    const rightColumnWords = document.querySelectorAll('#right-column .word');
+    const message = document.getElementById('message');
+    const formedWordDisplay = document.getElementById('formed-word');
+
+    // Clear highlighting of words
+    function clearSelected() {
+        leftColumnWords.forEach(word => word.classList.remove('selected'));
+        rightColumnWords.forEach(word => word.classList.remove('selected'));
+    }
+
+    // Check if the selected words form a correct compound word
+    function checkMatch(selectedWord, targetWord) {
+        return compoundWords[selectedWord] === targetWord;
+    }
+
+    // Handle left column word selection
+    leftColumnWords.forEach(word => {
+        word.addEventListener('click', () => {
+            clearSelected(); // Remove previous highlights
+            word.classList.add('selected');
+            selectedWord = word.getAttribute('data-word');
+            message.textContent = `You selected "${selectedWord}". Now choose the second part.`;
+            message.style.color = "black";
+        });
+    });
+
+    // Handle right column word selection
+    rightColumnWords.forEach(word => {
+        word.addEventListener('click', () => {
+            const targetWord = word.getAttribute('data-word');
+            if (selectedWord) {
+                if (checkMatch(selectedWord, targetWord)) {
+                    formedWord = `${selectedWord}${targetWord}`;
+                    formedWordDisplay.textContent = `New word: ${formedWord}`;
+                    message.textContent = `You made a new word: ${formedWord}!`;
+                    message.style.color = "green";
+                } else {
+                    formedWord = `${selectedWord}${targetWord}`;
+                    formedWordDisplay.textContent = `Word formed: ${formedWord}`;
+                    message.textContent = `"${formedWord}" is not a valid compound word. Try again!`;
+                    message.style.color = "red";
+                }
+                selectedWord = null; // Reset selection
+                clearSelected(); // Clear highlights
+            } else {
+                message.textContent = "Please select the first part of the word.";
+                message.style.color = "red";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
